@@ -1,0 +1,46 @@
+#startup --host_jvm_args=-Xmx2g
+build --config=linux
+# build --config=clang
+build --verbose_failures
+# build --sandbox_debug
+build --config=libc++
+
+# build --workspace_status_command="bash bazel/get_workspace_status"
+#build --experimental_local_memory_estimate
+build --experimental_strict_action_env=true
+build --action_env=BAZEL_LINKLIBS=-l%:libstdc++.a
+build --action_env=BAZEL_LINKOPTS=-lm
+#build --enable_platform_specific_config
+
+# Enable position independent code, this option is not supported on Windows and default on on macOS.
+build:linux --copt=-fPIC
+build:linux --copt=-DBAZEL_O
+build:linux --copt=-std=c99
+build:linux --cxxopt=-std=c++17
+build:linux --conlyopt=-fexceptions
+
+# Pass PATH, CC, CXX and LLVM_CONFIG variables from the environment.
+build --action_env=CC
+build --action_env=CXX
+build --action_env=CPP
+build --action_env=LLVM_CONFIG
+build --action_env=PATH
+
+
+# Common flags for Clang
+build:clang --action_env=BAZEL_COMPILER=clang
+build:clang --linkopt=-fuse-ld=lld
+
+
+# Clang with libc++
+build:libc++ --config=clang
+build:libc++ --action_env=CXXFLAGS=-stdlib=libc++
+build:libc++ --action_env=LDFLAGS=-stdlib=libc++
+build:libc++ --action_env=BAZEL_CXXOPTS=-stdlib=libc++
+build:libc++ --action_env=BAZEL_LINKLIBS=-l%:libc++.a:-l%:libc++abi.a:-lm
+build:libc++ --define force_libcpp=enabled
+
+# Optimize build for binary size reduction.
+# build:sizeopt -c opt --copt -Os
+
+try-import %workspace%/clang.bazelrc

@@ -1,4 +1,4 @@
-load("@varys_api//bazel:api_repositories.bzl", "api_dependencies")
+# load("@varys_api//bazel:api_repositories.bzl", "api_dependencies")
 load("//bazel/externel:externel_repository.bzl", 
     "com_google_absl",
     "google_test",

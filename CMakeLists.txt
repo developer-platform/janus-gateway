@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(janus-gateway C)
+project(janus-gateway LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
 #CMAKE_C_COMPILER(clang)
@@ -16,9 +16,9 @@ link_directories(
 )
 
 #LOGGER 子目录
-set(LOG_FILES "./loggers/logger.h" "./loggers/janus_jsonlog.c")
+set(LOG_FILES "./janus/loggers/logger.h" "../janus/loggers/janus_jsonlog.c")
 # transport 子目录
-file(GLOB TRANSPORT_FILES "./transports/*.h" "./transports/*.c")
+file(GLOB TRANSPORT_FILES "./janus/transports/*.h" "./janus/transports/*.c")
 file(GLOB EVENTS_FILES "./events/*.h" "./events/*.c")
 file(GLOB_RECURSE  FUZZERS_FILES "./fuzzers/*.h" "./fuzzers/*.c")
 file(GLOB_RECURSE  PLUGINS_FILES "./plugins/*.h" "./plugins/*.c")
