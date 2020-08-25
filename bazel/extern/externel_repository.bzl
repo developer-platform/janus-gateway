@@ -38,4 +38,26 @@ def janus_dependency():
         strip_prefix = "libconfig-1.7.2",
     )
 
+    http_archive(
+        name = "libsrtp",
+        build_file_content = BUILD_ALL_CONTENT,
+        urls = ["https://github.com/cisco/libsrtp/archive/v2.3.0.zip"],
+        sha256 = "55da00b86e03e70935309fdd83697155b2d732a018a1b39c54fb20725c8f6ea1",
+        strip_prefix = "libsrtp-2.3.0",
+    )
+    http_archive(
+        name = "usrsctp",
+        build_file_content = BUILD_ALL_CONTENT,
+        urls = ["https://github.com/sctplab/usrsctp/archive/31f4eb54578c5766cca51191a7aedb834989b0df.zip"],
+        #sha256 = "55da00b86e03e70935309fdd83697155b2d732a018a1b39c54fb20725c8f6ea1",
+        strip_prefix = "usrsctp-31f4eb54578c5766cca51191a7aedb834989b0df",
+    )
+    http_archive(
+        name = "libmicrohttpd",
+        build_file_content = BUILD_ALL_CONTENT,
+        urls = ["https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.71.tar.gz"],
+        #sha256 = "55da00b86e03e70935309fdd83697155b2d732a018a1b39c54fb20725c8f6ea1",
+        strip_prefix = "libmicrohttpd-0.9.71",
+    )
+
 

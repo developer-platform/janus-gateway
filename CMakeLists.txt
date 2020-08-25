@@ -15,14 +15,19 @@ link_directories(
         ${PROJECT_SOURCE_DIR}/build/lib
 )
 
-#LOGGER 子目录
-set(LOG_FILES "./janus/loggers/logger.h" "../janus/loggers/janus_jsonlog.c")
-# transport 子目录
-file(GLOB TRANSPORT_FILES "./janus/transports/*.h" "./janus/transports/*.c")
-file(GLOB EVENTS_FILES "./events/*.h" "./events/*.c")
-file(GLOB_RECURSE  FUZZERS_FILES "./fuzzers/*.h" "./fuzzers/*.c")
-file(GLOB_RECURSE  PLUGINS_FILES "./plugins/*.h" "./plugins/*.c")
+SET(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules ${CMAKE_SOURCE_DIR}/cmake/modules)
 
+add_subdirectory(janus)
+# 添加json库
+FIND_PACKAGE(libjansson REQUIRED)
+MARK_AS_ADVANCED(
+        LIBJANSSON_INCLUDE_DIR
+        LIBJANSSON_LIBRARIES
+)
+IF (LIBJANSSON_INCLUDE_DIR AND LIBJANSSON_LIBRARIES)
+    MESSAGE(STATUS "Found libjansson libraries")
+    INCLUDE_DIRECTORIES(${LIBJANSSON_INCLUDE_DIR})
+    MESSAGE(${LIBJANSSON_LIBRARIES})
+    TARGET_LINK_LIBRARIES(janus-gateway ${LIBJANSSON_LIBRARIES})
+ENDIF (LIBJANSSON_INCLUDE_DIR AND LIBJANSSON_LIBRARIES)
 
-aux_source_directory(. DIR_SRCS)
-add_executable(janus ${DIR_SRCS} ${LOG_FILES} ${TRANSPORT_FILES} ${EVENTS_FILES} ${FUZZERS_FILES} ${PLUGINS_FILES})
