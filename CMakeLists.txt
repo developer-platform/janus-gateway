@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.2)
 project(janus-gateway LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
@@ -43,8 +43,8 @@ link_directories(
 )
 
 #SET(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules ${CMAKE_SOURCE_DIR}/cmake/modules)
-add_library(jasson STATIC IMPORTED)
-set_property(TARGET jasson PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libjasson.a)
+add_library(jansson STATIC IMPORTED)
+set_property(TARGET jansson PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libjansson.a)
 
 add_library(glib STATIC IMPORTED)
 set_property(TARGET glib PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libglib-2.0.a)
@@ -59,42 +59,43 @@ add_library(srtp2 STATIC IMPORTED)
 set_property(TARGET srtp2 PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libsrtp2.a)
 
 add_library(usrsctp STATIC IMPORTED)
-set_property(TARGET usrsctp PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libusrsctp.a)
+set_property(TARGET usrsctp PROPERTY IMPORTED_LOCATION /usr/lib/libusrsctp.a)
 
 add_library(websockets STATIC IMPORTED)
-set_property(TARGET websockets PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libwebsockets.a)
+set_property(TARGET websockets PROPERTY IMPORTED_LOCATION /usr/lib/libwebsockets.a)
 
 add_library(sofia-sip-ua STATIC IMPORTED)
 set_property(TARGET sofia-sip-ua PROPERTY IMPORTED_LOCATION /usr/lib/libsofia-sip-ua.a)
 
 add_library(opus STATIC IMPORTED)
-set_property(TARGET opus PROPERTY IMPORTED_LOCATION /usr/lib/libopus.a)
+set_property(TARGET opus PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libopus.a)
 
 add_library(openssl STATIC IMPORTED)
-set_property(TARGET openssl PROPERTY IMPORTED_LOCATION /usr/lib/libssl.a)
+set_property(TARGET openssl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libssl.a)
 
 add_library(ogg STATIC IMPORTED)
-set_property(TARGET ogg PROPERTY IMPORTED_LOCATION /usr/lib/libogg.a)
+set_property(TARGET ogg PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libogg.a)
 
 add_library(curl STATIC IMPORTED)
 set_property(TARGET curl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libcurl.a)
 
 
 # 使用srtp2
-set(LIBSRTP_CFLAGS -DHAVE_SRTP_2)
-
+set(AM_CFLAGS -DHAVE_PORTRANGE -DHAVE_LIBOGG)
+# use websockct  -DHAVE_WSEVH; use rest handler HAVE_SAMPLEEVH
+set(JANUS_CFLAGS -DUSE_PTHREAD_MUTEX -DHAVE_DTLS_SETTIMEOUT -DHAVE_WEBSOCKETS -DHAVE_WSEVH -DHAVE_SAMPLEEVH)
+set(LIBSRTP_CFLAGS -DHAVE_SRTP_2 -DHAVE_SCTP)
+set(LIBCURL_CFLAGS -DHAVE_LIBCURL -DHAVE_TURNRESTAPI -DHAVE_SAMPLEEVH)
 add_definitions(
-        -DLOGGERDIR=${PROJECT_SOURCE_DIR}/build/lib
-        -DCONFDIR=${PROJECT_SOURCE_DIR}/conf
-        -DPLUGINDIR=
-        -DTRANSPORTDIR=
-        $(AM_CFLAGS)
-        $(JANUS_CFLAGS)
+        -DLOGGERDIR="${PROJECT_SOURCE_DIR}/build/lib"
+        -DCONFDIR="${PROJECT_SOURCE_DIR}/conf"
+        -DPLUGINDIR="${PROJECT_SOURCE_DIR}/build/lib"
+        -DTRANSPORTDIR="${PROJECT_SOURCE_DIR}/build/lib"
+        -DEVENTDIR="${PROJECT_SOURCE_DIR}/build/lib"
+        ${AM_CFLAGS}
+        ${JANUS_CFLAGS}
         ${LIBSRTP_CFLAGS}
-        $(LIBCURL_CFLAGS)
-        -DPLUGINDIR=\"$(plugindir)\"
-        -DTRANSPORTDIR=\"$(transportdir)\"
-        -DEVENTDIR=\"$(eventdir)\"
+        ${LIBCURL_CFLAGS}
 )
 
 add_subdirectory(janus)

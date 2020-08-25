@@ -2,11 +2,12 @@
 #LOGGER 子目录
 add_subdirectory(loggers)
 add_subdirectory(events)
+add_subdirectory(transports)
 # transport 子目录
-file(GLOB TRANSPORT_FILES "./transports/*.h" "./transports/*.c")
+#file(GLOB TRANSPORT_FILES "./transports/*.h" "./transports/*.c")
 #file(GLOB EVENTS_FILES "./events/*.h" "./events/*.c")
-file(GLOB_RECURSE  FUZZERS_FILES "./fuzzers/*.h" "./fuzzers/*.c")
-file(GLOB_RECURSE  PLUGINS_FILES "./plugins/*.h" "./plugins/*.c")
+#file(GLOB_RECURSE  FUZZERS_FILES "./fuzzers/*.h" "./fuzzers/*.c")
+#file(GLOB_RECURSE  PLUGINS_FILES "./plugins/*.h" "./plugins/*.c")
 
 
 
@@ -14,13 +15,15 @@ aux_source_directory(. DIR_SRCS)
 add_executable(janus-gateway ${DIR_SRCS} ${LOG_FILES} ${TRANSPORT_FILES} ${EVENTS_FILES} ${FUZZERS_FILES} ${PLUGINS_FILES})
 # 链接自定义共享库
 target_link_libraries(janus-gateway jlogger)
-# 简单的rest事件处理器
-target_link_libraries(janus-gateway sampleevh)
-# webservice 事件处理器
-target_link_libraries(janus-gateway wsevh)
+target_link_libraries(janus-gateway janus_transports)
+target_link_libraries(janus-gateway janus_plugin)
+## 简单的rest事件处理器
+#target_link_libraries(janus-gateway sampleevh)
+## webservice 事件处理器
+#target_link_libraries(janus-gateway wsevh)
 
 
-target_link_libraries(janus-gateway jasson)
+target_link_libraries(janus-gateway jansson)
 target_link_libraries(janus-gateway glib)
 target_link_libraries(janus-gateway microhttpd)
 target_link_libraries(janus-gateway rabbitmq)
