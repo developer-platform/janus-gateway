@@ -12,13 +12,11 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/lib)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/bin)
 
 include_directories(
-#        ${PROJECT_SOURCE_DIR}/janus
+        ${PROJECT_SOURCE_DIR}/janus
         # usrsctp rabbitmq
         /usr/include
-        # nanomsg
+        # nanomsg curl
         /usr/include/x86_64-linux-gnu
-        # curl
-        /usr/include/x86_64-linux-gnu/curl
         /usr/include/glib-2.0
         /usr/lib/x86_64-linux-gnu/glib-2.0/include
         /usr/include/stun/usages
@@ -81,9 +79,22 @@ set_property(TARGET ogg PROPERTY IMPORTED_LOCATION /usr/lib/libogg.a)
 add_library(curl STATIC IMPORTED)
 set_property(TARGET curl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libcurl.a)
 
+
 # 使用srtp2
+set(LIBSRTP_CFLAGS -DHAVE_SRTP_2)
+
 add_definitions(
-        -DHAVE_SRTP_2
+        -DLOGGERDIR=${PROJECT_SOURCE_DIR}/build/lib
+        -DCONFDIR=${PROJECT_SOURCE_DIR}/conf
+        -DPLUGINDIR=
+        -DTRANSPORTDIR=
+        $(AM_CFLAGS)
+        $(JANUS_CFLAGS)
+        ${LIBSRTP_CFLAGS}
+        $(LIBCURL_CFLAGS)
+        -DPLUGINDIR=\"$(plugindir)\"
+        -DTRANSPORTDIR=\"$(transportdir)\"
+        -DEVENTDIR=\"$(eventdir)\"
 )
 
 add_subdirectory(janus)
