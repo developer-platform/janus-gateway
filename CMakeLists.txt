@@ -46,8 +46,15 @@ link_directories(
 add_library(jansson STATIC IMPORTED)
 set_property(TARGET jansson PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libjansson.a)
 
-add_library(glib STATIC IMPORTED)
-set_property(TARGET glib PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libglib-2.0.a)
+#add_library(glib STATIC IMPORTED)
+#set_property(TARGET glib PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libglib-2.0.a)
+#add_library(gio STATIC IMPORTED)
+#set_property(TARGET gio PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libgio-2.0.a)
+#add_library(gobject STATIC IMPORTED)
+#set_property(TARGET gobject PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libgobject-2.0.a)
+
+add_library(config STATIC IMPORTED)
+set_property(TARGET config PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libconfig.a)
 
 add_library(microhttpd STATIC IMPORTED)
 set_property(TARGET microhttpd PROPERTY IMPORTED_LOCATION /usr/local/lib/libmicrohttpd.a)
@@ -82,8 +89,8 @@ set_property(TARGET curl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/li
 
 # 使用srtp2
 set(AM_CFLAGS -DHAVE_PORTRANGE -DHAVE_LIBOGG)
-# use websockct  -DHAVE_WSEVH; use rest handler HAVE_SAMPLEEVH
-set(JANUS_CFLAGS -DUSE_PTHREAD_MUTEX -DHAVE_DTLS_SETTIMEOUT -DHAVE_WEBSOCKETS -DHAVE_WSEVH -DHAVE_SAMPLEEVH)
+# use websockct  -DHAVE_WSEVH; use rest handler HAVE_SAMPLEEVH ; 设置ssl超市 -DHAVE_DTLS_SETTIMEOUT
+set(JANUS_CFLAGS -DUSE_PTHREAD_MUTEX  -DHAVE_WEBSOCKETS -DHAVE_WSEVH -DHAVE_SAMPLEEVH)
 set(LIBSRTP_CFLAGS -DHAVE_SRTP_2 -DHAVE_SCTP)
 set(LIBCURL_CFLAGS -DHAVE_LIBCURL -DHAVE_TURNRESTAPI -DHAVE_SAMPLEEVH)
 add_definitions(
