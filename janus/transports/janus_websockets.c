@@ -47,7 +47,7 @@
 #define JANUS_WEBSOCKETS_DESCRIPTION		"This transport plugin adds WebSockets support to the Janus API via libwebsockets."
 #define JANUS_WEBSOCKETS_NAME				"JANUS WebSockets transport plugin"
 #define JANUS_WEBSOCKETS_AUTHOR				"Meetecho s.r.l."
-#define JANUS_WEBSOCKETS_PACKAGE			"janus.transport.websockets"
+#define JANUS_WEBSOCKETS_PACKAGE			"janus.transport.jwebsockets"
 
 /* Transport methods */
 janus_transport *create(void);

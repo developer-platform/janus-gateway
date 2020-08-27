@@ -6,14 +6,18 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_BUILD_TYPE "Debug")
 #设置库文件存放路径
 #设置安装目录
-set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/install)
+set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/target)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/lib)
 #设置执行文件存放路径
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/bin)
+set(TARGET_DIR ${PROJECT_SOURCE_DIR}/target)
+
+set(EXTERN_LIB_PATH ${PROJECT_SOURCE_DIR}/cmake/3rdparty/lib/linux)
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/janus
-        # usrsctp rabbitmq
+        # usrsctp rabbitmq websockets microhttpd sofia-sip-ua
+        # /usr/lib
         /usr/include
         # nanomsg curl
         /usr/include/x86_64-linux-gnu
@@ -38,13 +42,15 @@ include_directories(
 #添加库文件搜索路径
 link_directories(
         ${PROJECT_SOURCE_DIR}/build/lib
-        # libcurl
+        # libcurl ogg ssl libjansson config librabbitmq srtp2
         /usr/lib/x86_64-linux-gnu
+        # usrsctp sofia-sip-ua opus
+        # /usr/lib
 )
 
 #SET(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules ${CMAKE_SOURCE_DIR}/cmake/modules)
 add_library(jansson STATIC IMPORTED)
-set_property(TARGET jansson PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libjansson.a)
+set_property(TARGET jansson PROPERTY IMPORTED_LOCATION ${EXTERN_LIB_PATH}/libjansson.a)
 
 #add_library(glib STATIC IMPORTED)
 #set_property(TARGET glib PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libglib-2.0.a)
@@ -53,52 +59,52 @@ set_property(TARGET jansson PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu
 #add_library(gobject STATIC IMPORTED)
 #set_property(TARGET gobject PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libgobject-2.0.a)
 
-add_library(config STATIC IMPORTED)
-set_property(TARGET config PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libconfig.a)
+#add_library(config STATIC IMPORTED)
+#set_property(TARGET config PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libconfig.a)
 
-add_library(microhttpd STATIC IMPORTED)
-set_property(TARGET microhttpd PROPERTY IMPORTED_LOCATION /usr/local/lib/libmicrohttpd.a)
+#add_library(rabbitmq STATIC IMPORTED)
+#set_property(TARGET rabbitmq PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/librabbitmq.a)
 
-add_library(rabbitmq STATIC IMPORTED)
-set_property(TARGET rabbitmq PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/librabbitmq.a)
+#add_library(srtp2 STATIC IMPORTED)
+#set_property(TARGET srtp2 PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libsrtp2.a)
 
-add_library(srtp2 STATIC IMPORTED)
-set_property(TARGET srtp2 PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libsrtp2.a)
+#add_library(usrsctp STATIC IMPORTED)
+#set_property(TARGET usrsctp PROPERTY IMPORTED_LOCATION /usr/lib/libusrsctp.a)
 
-add_library(usrsctp STATIC IMPORTED)
-set_property(TARGET usrsctp PROPERTY IMPORTED_LOCATION /usr/lib/libusrsctp.a)
+#add_library(sofia-sip-ua STATIC IMPORTED)
+#set_property(TARGET sofia-sip-ua PROPERTY IMPORTED_LOCATION /usr/lib/libsofia-sip-ua.a)
 
-add_library(websockets STATIC IMPORTED)
-set_property(TARGET websockets PROPERTY IMPORTED_LOCATION /usr/lib/libwebsockets.a)
+#add_library(websockets STATIC IMPORTED)
+#set_property(TARGET websockets PROPERTY IMPORTED_LOCATION /usr/lib/libwebsockets.a)
 
-add_library(sofia-sip-ua STATIC IMPORTED)
-set_property(TARGET sofia-sip-ua PROPERTY IMPORTED_LOCATION /usr/lib/libsofia-sip-ua.a)
+#add_library(openssl STATIC IMPORTED)
+#set_property(TARGET openssl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libssl.a)
 
-add_library(opus STATIC IMPORTED)
-set_property(TARGET opus PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libopus.a)
+#add_library(ogg STATIC IMPORTED)
+#set_property(TARGET ogg PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libogg.a)
 
-add_library(openssl STATIC IMPORTED)
-set_property(TARGET openssl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libssl.a)
-
-add_library(ogg STATIC IMPORTED)
-set_property(TARGET ogg PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libogg.a)
-
-add_library(curl STATIC IMPORTED)
-set_property(TARGET curl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libcurl.a)
+#add_library(openssl STATIC IMPORTED)
+#set_property(TARGET openssl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libssl.a)
+#
+#add_library(ogg STATIC IMPORTED)
+#set_property(TARGET ogg PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libogg.a)
+#
+#add_library(curl STATIC IMPORTED)
+#set_property(TARGET curl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libcurl.a)
 
 
 # 使用srtp2
 set(AM_CFLAGS -DHAVE_PORTRANGE -DHAVE_LIBOGG)
-# use websockct  -DHAVE_WSEVH; use rest handler HAVE_SAMPLEEVH ; 设置ssl超市 -DHAVE_DTLS_SETTIMEOUT
-set(JANUS_CFLAGS -DUSE_PTHREAD_MUTEX  -DHAVE_WEBSOCKETS -DHAVE_WSEVH -DHAVE_SAMPLEEVH)
+# use websockct  -DHAVE_WSEVH; use rest handler HAVE_SAMPLEEVH ; 设置ssl超市 -DHAVE_DTLS_SETTIMEOUT -DUSE_PTHREAD_MUTEX
+set(JANUS_CFLAGS   -DHAVE_WEBSOCKETS -DHAVE_WSEVH -DHAVE_SAMPLEEVH)
 set(LIBSRTP_CFLAGS -DHAVE_SRTP_2 -DHAVE_SCTP)
 set(LIBCURL_CFLAGS -DHAVE_LIBCURL -DHAVE_TURNRESTAPI -DHAVE_SAMPLEEVH)
 add_definitions(
-        -DLOGGERDIR="${PROJECT_SOURCE_DIR}/build/lib"
-        -DCONFDIR="${PROJECT_SOURCE_DIR}/conf"
-        -DPLUGINDIR="${PROJECT_SOURCE_DIR}/build/lib"
-        -DTRANSPORTDIR="${PROJECT_SOURCE_DIR}/build/lib"
-        -DEVENTDIR="${PROJECT_SOURCE_DIR}/build/lib"
+        -DLOGGERDIR="${TARGET_DIR}/loggers"
+        -DCONFDIR="${TARGET_DIR}/etc/janus"
+        -DPLUGINDIR="${TARGET_DIR}/plugins"
+        -DTRANSPORTDIR="${TARGET_DIR}/transports"
+        -DEVENTDIR="${TARGET_DIR}/events"
         ${AM_CFLAGS}
         ${JANUS_CFLAGS}
         ${LIBSRTP_CFLAGS}
