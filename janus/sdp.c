@@ -19,6 +19,7 @@
 #include <netdb.h>
 
 #include <gio/gio.h>
+#include <string.h>
 
 #include "janus.h"
 #include "ice.h"

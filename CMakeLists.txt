@@ -48,53 +48,40 @@ link_directories(
         # /usr/lib
 )
 
+function(add_static_lib lname)
+    add_library(${lname} STATIC IMPORTED)
+    set_property(TARGET ${lname} PROPERTY IMPORTED_LOCATION ${EXTERN_LIB_PATH}/lib${lname}.a)
+    endfunction()
+
 #SET(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules ${CMAKE_SOURCE_DIR}/cmake/modules)
-add_library(jansson STATIC IMPORTED)
-set_property(TARGET jansson PROPERTY IMPORTED_LOCATION ${EXTERN_LIB_PATH}/libjansson.a)
+add_static_lib(jansson)
+add_static_lib(config)
+add_static_lib(rabbitmq)
+add_static_lib(srtp2)
+add_static_lib(usrsctp)
+add_static_lib(sofia-sip-ua)
+add_static_lib(websockets)
+add_static_lib(ssl)
+add_static_lib(ogg)
+add_static_lib(curl)
+add_static_lib(microhttpd)
 
-#add_library(glib STATIC IMPORTED)
-#set_property(TARGET glib PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libglib-2.0.a)
-#add_library(gio STATIC IMPORTED)
-#set_property(TARGET gio PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libgio-2.0.a)
-#add_library(gobject STATIC IMPORTED)
-#set_property(TARGET gobject PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libgobject-2.0.a)
+# nice 四大依赖
+add_static_lib(nice-random)
+add_static_lib(stun)
+add_static_lib(socket)
+add_static_lib(agent)
 
-#add_library(config STATIC IMPORTED)
-#set_property(TARGET config PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libconfig.a)
+add_library(glib STATIC IMPORTED)
+set_property(TARGET glib PROPERTY IMPORTED_LOCATION ${EXTERN_LIB_PATH}/libglib-2.0.a)
+add_library(gio STATIC IMPORTED)
+set_property(TARGET gio PROPERTY IMPORTED_LOCATION ${EXTERN_LIB_PATH}/libgio-2.0.a)
+add_library(gobject STATIC IMPORTED)
+set_property(TARGET gobject PROPERTY IMPORTED_LOCATION ${EXTERN_LIB_PATH}/libgobject-2.0.a)
 
-#add_library(rabbitmq STATIC IMPORTED)
-#set_property(TARGET rabbitmq PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/librabbitmq.a)
-
-#add_library(srtp2 STATIC IMPORTED)
-#set_property(TARGET srtp2 PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libsrtp2.a)
-
-#add_library(usrsctp STATIC IMPORTED)
-#set_property(TARGET usrsctp PROPERTY IMPORTED_LOCATION /usr/lib/libusrsctp.a)
-
-#add_library(sofia-sip-ua STATIC IMPORTED)
-#set_property(TARGET sofia-sip-ua PROPERTY IMPORTED_LOCATION /usr/lib/libsofia-sip-ua.a)
-
-#add_library(websockets STATIC IMPORTED)
-#set_property(TARGET websockets PROPERTY IMPORTED_LOCATION /usr/lib/libwebsockets.a)
-
-#add_library(openssl STATIC IMPORTED)
-#set_property(TARGET openssl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libssl.a)
-
-#add_library(ogg STATIC IMPORTED)
-#set_property(TARGET ogg PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libogg.a)
-
-#add_library(openssl STATIC IMPORTED)
-#set_property(TARGET openssl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libssl.a)
-#
-#add_library(ogg STATIC IMPORTED)
-#set_property(TARGET ogg PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libogg.a)
-#
-#add_library(curl STATIC IMPORTED)
-#set_property(TARGET curl PROPERTY IMPORTED_LOCATION /usr/lib/x86_64-linux-gnu/libcurl.a)
-
-
+set(CMAKE_C_FLAGS -Wl,--copy-dt-needed-entries)
 # 使用srtp2
-set(AM_CFLAGS -DHAVE_PORTRANGE -DHAVE_LIBOGG)
+set(AM_CFLAGS -DHAVE_PORTRANGE -DHAVE_LIBOGG -D_GNU_SOURCE)
 # use websockct  -DHAVE_WSEVH; use rest handler HAVE_SAMPLEEVH ; 设置ssl超市 -DHAVE_DTLS_SETTIMEOUT -DUSE_PTHREAD_MUTEX
 set(JANUS_CFLAGS   -DHAVE_WEBSOCKETS -DHAVE_WSEVH -DHAVE_SAMPLEEVH)
 set(LIBSRTP_CFLAGS -DHAVE_SRTP_2 -DHAVE_SCTP)
